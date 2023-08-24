@@ -1,38 +1,38 @@
-/**
- * @fileoverview configure and start the http server
- * @author Chung-Yueh Lien
- */
+import sql from 'mssql';
+import controllers from '../controllers/index.js';
+import express from 'express';
+import viteExpress from 'vite-express';
 
-var config = require('../config/setting.js'); /* make sure OS specific configuration is included first */
-var http = require('http');
-var express = require('express');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var passport = require('passport');
-var session = require('express-session');
+const app = express();
+app.use(express.json());
+// 資料庫連接設定
+const config = {
+    user: 'sa',
+    password: '<YourStrong@Passw0rd>',
+    server: 'localhost',
+    database: 'BANK',
+    options: {
+        encrypt: true, // 使用 SSL
+        trustServerCertificate: true // 信任自簽名憑證
+    }
+};
 
-var app = express();
-app.set('views', config.HTTPServer.viewsRoot);
-app.use(express.static(config.HTTPServer.viewsRoot));
-app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-app.use(session({
-    secret: 'ntunhsimsecret',
-    resave: false,
-    saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.engine('html', require('ejs').renderFile);
+// 連接資料庫
+sql.connect(config).then(pool => {
+    console.log('Connected to the database.');
 
-require('../models/user/passport.js')(passport);
-require("../controller/routes.js")(app, passport);
+    // 將資料庫 pool 傳遞給你的控制器，如果需要的話
+    app.locals.pool = pool;
 
-http.createServer(app).on('connection', function (socket) {
-    socket.setTimeout(config.HTTPServer.timeout);
-}).listen(config.HTTPServer.httpPort, function () {
-    console.log('HTTP server is listening on port: ' + config.HTTPServer.httpPort);
+    // 使用你的控制器
+    app.use('/api', controllers);
+
+    const server = app.listen(3251, () => {
+        console.log('Server is running on port 3251');
+    });
+
+    viteExpress.bind(app, server);
+
+}).catch(err => {
+    console.error('Database connection failed!', err);
 });
