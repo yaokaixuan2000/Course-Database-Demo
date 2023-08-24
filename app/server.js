@@ -1,6 +1,6 @@
+import express from 'express';
 import sql from 'mssql';
 import controllers from '../controllers/index.js';
-import express from 'express';
 import viteExpress from 'vite-express';
 
 const app = express();
@@ -36,3 +36,4 @@ sql.connect(config).then(pool => {
 }).catch(err => {
     console.error('Database connection failed!', err);
 });
+

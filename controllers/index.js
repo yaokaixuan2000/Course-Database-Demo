@@ -5,7 +5,15 @@ import sql from 'mssql';
 const router = Router();
 
 
+router.post('/login', (req, res) => {
+    const { username, password } = req.body;
 
+    if (username === 'admin' && password === 'admin') {
+        res.json({ success: true, message: 'Login successful' });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid Credentials' });
+    }
+});
 
 router.get('/trans', async (req, res) => {
     try {
