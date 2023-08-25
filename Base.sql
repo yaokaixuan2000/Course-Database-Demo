@@ -47,25 +47,29 @@ INSERT INTO Customer
 VALUES('003', HASHBYTES('SHA2_512',N'123'), 'DW', 'Wang', '19981002', 'M', 'Beitou', 'Taipei', 'Taiwan', @CURRENT_TS, '0');
 GO
 
--- 新增銀行帳戶Table: Account
 CREATE TABLE Account
 (
-    ID int,
-    AccID varchar(10) PRIMARY KEY,
+    ID int PRIMARY KEY,
+    AccID varchar(10) UNIQUE,
+    Password varchar(100),
     Balance int,
     BranchID int,
     AccType varchar(3),
     UP_Date datetime,
     UP_User varchar(20)
-)
-    GO
+);
 
--- 插入測試資料
-DECLARE @CURRENT_TS datetimeoffset = GETDATE()
+-- 插入测试数据（只有帐号 "admin" 的记录）
+DECLARE @CURRENT_TS datetimeoffset = GETDATE();
 INSERT INTO ACCOUNT
-  (ID, AccID, Balance, BranchID, AccType, UP_Date, UP_User)
-VALUES('001', '00000001', '5000', '010', 'B01', @CURRENT_TS, '0');
+(ID, AccID, Password, Balance, BranchID, AccType, UP_Date, UP_User)
+VALUES
+    (1, 'admin', 'admin', 5000, 10, 'B01', @CURRENT_TS, '0');
 GO
+
+select * from Account
+
+
 
 -- 新增交易紀錄Table: Trans
 CREATE TABLE Trans

@@ -23,7 +23,7 @@ const Root = () => {
             const data = await response.json();
 
             if (data.success) {
-                authContext.setLoggedIn(true); // 更新登录状态
+                authContext.updateLoggedInStatus(true); // 更新登录状态
                 navigate('/TranList');
             } else {
                 console.error('Login failed');

@@ -5,13 +5,28 @@ import sql from 'mssql';
 const router = Router();
 
 
-router.post('/login', (req, res) => {
-    const { username, password } = req.body;
+router.post('/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
 
-    if (username === 'admin' && password === 'admin') {
-        res.json({ success: true, message: 'Login successful' });
-    } else {
-        res.status(401).json({ success: false, message: 'Invalid Credentials' });
+        const pool = req.app.locals.pool;
+
+        const query = `SELECT AccID, Password FROM Account WHERE AccID = @username AND Password = @password;`;
+
+        const result = await pool
+            .request()
+            .input('username', username)
+            .input('password', password)
+            .query(query);
+
+        if (result.recordset.length > 0) {
+            res.json({ success: true, message: 'Login successful' });
+        } else {
+            res.status(401).json({ success: false, message: 'Invalid Credentials' });
+        }
+    } catch (err) {
+        console.error('Error during login:', err); // 添加错误日志
+        res.status(500).send('Internal Server Error');
     }
 });
 

@@ -20,6 +20,7 @@ function TransList() {
 
         checkLoginStatus()
             .then(response => {
+                console.log('Login status response:', response); // 添加此行
                 if (response.success) {
                     setLoggedIn(true);
                 } else {
@@ -30,7 +31,8 @@ function TransList() {
                 console.error('Error checking login status:', error);
                 setLoggedIn(false);
             });
-    }, []);
+
+    }, [setLoggedIn]);
 
 
     const fetchTransData = () => {
@@ -140,17 +142,17 @@ function TransList() {
 
     return (
 <div>
-
+    {!loggedIn ? (
+        <p className="text-center text-red-600 text-4xl">請先登入方可使用所有功能謝謝</p>
+    ) : (
     <div className="container m-4 rounded-lg border-4 border-gray-500 bg-gray-200 mx-auto  p-4">
 
-
-        <h1 className=" flex text-2xl  w-full font-semibold mb-4"><Icon className="text-gray-500 text-3xl" icon="teenyicons:android-solid" />北護銀行助手-交易紀錄編輯器</h1>
-        {/* 新增的表單 */}
-        <form className=" w-full"
+        <form className="w-2/3"
             onSubmit={(e) => {
             e.preventDefault();
             addTransaction(newTrans);
         }}>
+            <h1 className="m-4 font-bold text-2xl">交易紀錄crud</h1>
             <table className="mx-auto w-full  border-gray-500 bg-white border-2">
                 <thead className="bg-gray-100">
                 <tr>
@@ -187,7 +189,7 @@ function TransList() {
                     <td>
                         <button
                             className=" px-4 h-8 rounded-lg  text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
-                            type="submit">新增
+                            type="submit">+
                         </button>
                     </td>
                 </tr>
@@ -306,7 +308,7 @@ function TransList() {
         )}
 
     </div>
-
+    )}
 </div>
 
 
