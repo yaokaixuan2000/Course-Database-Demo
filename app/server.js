@@ -2,10 +2,24 @@ import express from 'express';
 import sql from 'mssql';
 import controllers from '../controllers/index.js';
 import viteExpress from 'vite-express';
+import session from 'express-session';
+
 
 const app = express();
 app.use(express.json());
-// 資料庫連接設定
+
+
+app.use(session({
+    secret: 'yourSecretKey',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false, // 改成 true 如果你使用 HTTPS
+        httpOnly: true,
+        maxAge: 60000 // 1 minute
+    }
+}));
+
 const config = {
     user: 'sa',
     password: '<YourStrong@Passw0rd>',

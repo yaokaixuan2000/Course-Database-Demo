@@ -1,39 +1,30 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from './AuthContext'; // 根据实际路径调整
+import { AuthContext } from './AuthContext';
 import Modal from '../Modal.jsx';
 import { Icon } from '@iconify/react';
 import { checkLoginStatus } from './login.jsx';
 
 function TransList() {
-    const { loggedIn, setLoggedIn } = useContext(AuthContext);
-
+    const { loggedIn, updateLoggedInStatus } = useContext(AuthContext);  // 使用 updateLoggedInStatus 而不是 setLoggedIn
     const [transData, setTransData] = useState([]);
     const [searchTranID, setSearchTranID] = useState('');
     const [searchedTrans, setSearchedTrans] = useState(null);
 
-    useEffect(() => {
-        fetch('/api/trans')
-            .then((response) => response.json())
-            .then((data) => setTransData(data))
-            .catch((error) => console.error('Error fetching data:', error));
-
-        checkLoginStatus()
-            .then(response => {
-                console.log('Login status response:', response); // 添加此行
-                if (response.success) {
-                    setLoggedIn(true);
-                } else {
-                    setLoggedIn(false);
-                }
-            })
-            .catch(error => {
-                console.error('Error checking login status:', error);
-                setLoggedIn(false);
-            });
-
-    }, [setLoggedIn]);
-
+    const checkLoginStatus = async () => {
+        try {
+            const response = await fetch('/api/check-auth');
+            const data = await response.json();
+            if (data.success) {
+                updateLoggedInStatus(true);  // 更新 AuthContext 的 loggedIn 狀態
+            } else {
+                updateLoggedInStatus(false);
+            }
+        } catch (error) {
+            console.error('Error checking login status:', error);
+            updateLoggedInStatus(false);
+        }
+    };
 
     const fetchTransData = () => {
         fetch('/api/trans')
@@ -146,14 +137,15 @@ function TransList() {
         <p className="text-center text-red-600 text-4xl">請先登入方可使用所有功能謝謝</p>
     ) : (
     <div className="container m-4 rounded-lg border-4 border-gray-500 bg-gray-200 mx-auto  p-4">
-
-        <form className="w-2/3"
+        <h1 className="m-4 font-bold text-2xl">交易紀錄crud</h1>
+        <form className="w-2/3 flex justify-center items-center mx-auto"
             onSubmit={(e) => {
             e.preventDefault();
             addTransaction(newTrans);
         }}>
-            <h1 className="m-4 font-bold text-2xl">交易紀錄crud</h1>
-            <table className="mx-auto w-full  border-gray-500 bg-white border-2">
+
+
+            <table className=" w-full  border-gray-500 bg-white border-2">
                 <thead className="bg-gray-100">
                 <tr>
                     <th className="py-2 px-4 border">銀行帳號</th>

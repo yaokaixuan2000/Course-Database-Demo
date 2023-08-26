@@ -58,7 +58,6 @@ CREATE TABLE Account
     UP_Date datetime,
     UP_User varchar(20)
 );
-
 -- 插入测试数据（只有帐号 "admin" 的记录）
 DECLARE @CURRENT_TS datetimeoffset = GETDATE();
 INSERT INTO ACCOUNT

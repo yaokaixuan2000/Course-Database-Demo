@@ -1,31 +1,43 @@
 /* eslint-disable no-unused-vars */
-
 import { Router } from "express";
 import sql from 'mssql';
 const router = Router();
 
 
+router.get('/check-auth', (req, res) => {
+    if (req.session && req.session.user) {
+        res.json({ loggedIn: true });
+    } else {
+        res.json({ loggedIn: false });
+    }
+});
 router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
-
         const pool = req.app.locals.pool;
 
-        const query = `SELECT AccID, Password FROM Account WHERE AccID = @username AND Password = @password;`;
+        // 查詢用於儲存明文密碼的字段
+        const query = `SELECT AccID, Password FROM Account WHERE AccID = @username;`;
 
-        const result = await pool
-            .request()
+        const result = await pool.request()
             .input('username', username)
-            .input('password', password)
             .query(query);
 
+        console.log("Query Result: ", result.recordset); // 印出查詢結果，方便除錯
+
         if (result.recordset.length > 0) {
-            res.json({ success: true, message: 'Login successful' });
+            // 直接比較明文密碼
+            if (password === result.recordset[0].Password) {
+                req.session.user = { AccID: username };
+                res.json({ success: true, message: 'Login successful' });
+            } else {
+                res.status(401).json({ success: false, message: 'Invalid Credentials' });
+            }
         } else {
             res.status(401).json({ success: false, message: 'Invalid Credentials' });
         }
     } catch (err) {
-        console.error('Error during login:', err); // 添加错误日志
+        console.error('Error during login:', err);
         res.status(500).send('Internal Server Error');
     }
 });

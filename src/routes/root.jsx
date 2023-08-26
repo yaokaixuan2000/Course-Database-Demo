@@ -4,14 +4,13 @@ import { AuthContext } from './AuthContext';
 const Root = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const authContext = useContext(AuthContext); // 使用整个上下文对象
+    const authContext = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
         try {
-            // 在实际应用中，这里可以调用后端登录接口
             const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
@@ -23,7 +22,7 @@ const Root = () => {
             const data = await response.json();
 
             if (data.success) {
-                authContext.updateLoggedInStatus(true); // 更新登录状态
+                authContext.updateLoggedInStatus(true);  // 更新登录状态
                 navigate('/TranList');
             } else {
                 console.error('Login failed');
