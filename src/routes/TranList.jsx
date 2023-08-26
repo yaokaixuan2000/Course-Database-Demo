@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from './AuthContext';
 import Modal from '../Modal.jsx';
 import { Icon } from '@iconify/react';
-import { checkLoginStatus } from './login.jsx';
+import { checkLoginStatus } from './checkLogin.jsx';
 
 function TransList() {
     const { loggedIn, updateLoggedInStatus } = useContext(AuthContext);  // 使用 updateLoggedInStatus 而不是 setLoggedIn

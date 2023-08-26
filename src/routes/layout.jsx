@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 import {Icon} from "@iconify/react";
 import {Link} from "react-router-dom";
-
+import {logout} from "./logout.jsx";
 const Layout = ({ children }) => {
     return (
         <div className="flex bg-gray-100 flex-col h-screen">
@@ -12,7 +12,7 @@ const Layout = ({ children }) => {
             <nav className="w-full mx-auto flex justify-center  bg-gray-100 p-2">
                 <Link to="/TranList" className="mx-4">交易紀錄</Link>
                 <Link to="/AccountSettings" className="mx-4">帳號設置</Link>
-                <Link to="/root" className="mx-4">登出</Link>
+                <button onClick={logout} className="mx-4">登出</button>
             </nav>
 
             <main className="bg-gray-100 flex-grow">{children}</main>
