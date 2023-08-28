@@ -19,8 +19,9 @@ function Modal({ isOpen, onClose, children }) {
 
     return (
         <div className={`fixed inset-0 flex items-center justify-center w-full z-50 transition-opacity duration-300 ${modalState}`}>
+
             <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
-            <div className="bg-white p-8 rounded-lg w-full relative z-10">
+            <div className="bg-white p-8 rounded-lg relative z-10">
                 {children}
                 <button className="absolute top-2 right-2 text-lg" onClick={onClose}>
                     ✕

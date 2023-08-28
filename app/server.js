@@ -4,10 +4,8 @@ import controllers from '../controllers/index.js';
 import viteExpress from 'vite-express';
 import session from 'express-session';
 
-
 const app = express();
 app.use(express.json());
-
 
 app.use(session({
     secret: 'yourSecretKey',
@@ -21,8 +19,12 @@ app.use(session({
 }));
 
 const config = {
+    // user: process.env.DATABASE_USER,
+    // password: process.env.DATABASE_PASSWORD,
+    // server: process.env.DATABASE_SERVER,
+    // database: process.env.DATABASE_NAME,
     user: 'sa',
-    password: '<YourStrong@Passw0rd>',
+    password: 'YourStrong@Passw0rd',
     server: 'localhost',
     database: 'BANK',
     options: {
@@ -50,4 +52,3 @@ sql.connect(config).then(pool => {
 }).catch(err => {
     console.error('Database connection failed!', err);
 });
-

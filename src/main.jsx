@@ -11,7 +11,7 @@ import './index.css'
 import {BrowserRouter} from 'react-router-dom';
 import {AuthProvider, AuthContext} from './routes/AuthContext.jsx';
 import Layout from "./routes/layout.jsx";
-
+import Ntunhssu  from "./routes/ntunhssu.jsx";
 const App = () => {
     const authContext = useContext(AuthContext);
 
@@ -36,6 +36,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Navigate to="/root"/>}/>
                 <Route path="/root" element={<Root/>}/>
+                <Route path="/ntunhssu" element={<Ntunhssu />}/>
                 <Route path="/TranList" element={<Layout><TransList /></Layout>} />
             </Routes>
         </BrowserRouter>
