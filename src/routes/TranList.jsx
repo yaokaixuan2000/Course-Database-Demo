@@ -6,6 +6,7 @@ import {Icon} from '@iconify/react';
 import {checkLoginStatus} from './checkLogin.jsx';
 
 function TransList() {
+    const [showDeleteAlert, setShowDeleteAlert] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const {loggedIn, updateLoggedInStatus} = useContext(AuthContext);  // 使用 updateLoggedInStatus 而不是 setLoggedIn
     const [transData, setTransData] = useState([]);
@@ -73,8 +74,12 @@ function TransList() {
             .then((response) => response.json())
             .then((data) => {
                 fetchTransData();  // 重新載入資料
+                setShowDeleteAlert(true);
             })
             .catch((error) => console.error('Error deleting transaction:', error));
+        setTimeout(() => {
+            setShowDeleteAlert(false);
+        }, 3000);
     };
 
 
@@ -195,21 +200,6 @@ function TransList() {
                                         </div>
                                     )}
 
-                                    <style>
-                                        {`
-                @keyframes slide-in-out {
-                    0%, 100% { transform: translateX(120%); }
-                    10%, 90% { transform: translateX(0); }
-                }
-
-                .animate-slide-in-out {
-                    animation: slide-in-out 3s ease;
-                }
-                `}
-                                    </style>
-
-
-
                                 </td>
                             </tr>
 
@@ -290,7 +280,13 @@ function TransList() {
                                             className=" px-4 mr-4 h-8 rounded-lg  text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
                                             onClick={() => deleteTransaction(trans.TranID)}>刪除
                                         </button>
-
+                                        {showDeleteAlert && (
+                                            <div
+                                                className="absolute bottom-4 right-4 bg-red-500 text-white p-2 rounded shadow animate-slide-in-out"
+                                            >
+                                                刪除成功!
+                                            </div>
+                                        )}
                                         <button
                                             className=" px-4 h-8 rounded-lg  text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
                                             onClick={() => openEditModal(trans)}>編輯
@@ -348,6 +344,18 @@ function TransList() {
 
                 </div>
             )}
+            <style>
+                {`
+                @keyframes slide-in-out {
+                    0%, 100% { transform: translateX(120%); }
+                    10%, 90% { transform: translateX(0); }
+                }
+
+                .animate-slide-in-out {
+                    animation: slide-in-out 3s ease;
+                }
+                `}
+            </style>
         </div>
 
 
