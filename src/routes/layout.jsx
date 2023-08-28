@@ -7,11 +7,10 @@ import {logout} from "./logout.jsx";
 const Layout = ({ children }) => {
     return (
         <div className="flex bg-gray-100 flex-col h-screen">
-            <h1 className=" mt-12 mx-24 flex text-4xl  w-full font-semibold mb-4"><Icon className="text-4xl text-gray-500 text-3xl" icon="teenyicons:android-solid" />北護銀行助手-交易紀錄編輯器</h1>
+            <h1 className=" mt-12 mx-24 flex text-4xl  w-full font-semibold mb-4"><Icon className="text-4xl text-gray-500 text-3xl" icon="teenyicons:android-solid" />學生會表單編輯器</h1>
 
             <nav className="w-full mx-auto flex justify-center  bg-gray-100 p-2">
-                <Link to="/TranList" className="mx-4">交易紀錄</Link>
-                <Link to="/AccountSettings" className="mx-4">帳號設置</Link>
+                <Link to="/TranList" className="mx-4">表單統整</Link>
                 <button onClick={logout} className="mx-4">登出</button>
             </nav>
 

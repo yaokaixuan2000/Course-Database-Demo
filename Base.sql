@@ -42,18 +42,17 @@ CREATE TABLE Reply
     StudentID varchar(10),
     Name varchar(40),
     Content varchar(max),
-    UP_Date datetime,
+    UP_Date datetime  DEFAULT GETDATE()  ,
     UP_User varchar(20)
 );
 GO
 
-DECLARE @CURRENT_TS datetimeoffset = GETDATE();
 INSERT INTO Reply
-( Class, StudentID, Name, Content, UP_Date, UP_User)
+( Class, StudentID, Name, Content, UP_User)
 VALUES
-    ( 'ClassA', '001', 'LJ KUO', '歡迎加入北護大家庭，與我們一同開啟美好校園時光！', @CURRENT_TS, '0'),
-    ( 'ClassB', '002', 'CW Lin', '歡迎來到北護！', @CURRENT_TS, '0'),
-    ( 'ClassC', '003', 'DW Wang', '歡迎新同學，一起學習成長！', @CURRENT_TS, '0');
+    ( 'ClassA', '001', 'LJ KUO', '歡迎加入北護大家庭，與我們一同開啟美好校園時光！', '0'),
+    ( 'ClassB', '002', 'CW Lin', '歡迎來到北護！', '0'),
+    ( 'ClassC', '003', 'DW Wang', '歡迎新同學，一起學習成長！', '0');
 GO
 
 SELECT * FROM Account;

@@ -162,7 +162,6 @@ function TransList() {
                                 <th className="py-2 px-4 border">學生編號</th>
                                 <th className="py-2 px-4 border">姓名</th>
                                 <th className="py-2 px-4 border">回覆內容</th>
-                                <th className="py-2 px-4 border">操作者</th>
                                 <th className="py-2 px-4 border"/>
                             </tr>
                             </thead>
@@ -183,10 +182,6 @@ function TransList() {
                                 <td className="py-2 px-4 border">
                                     <input type="text" placeholder="回覆內容" value={newReply.Content}
                                            onChange={(e) => setNewReply({ ...newReply, Content: e.target.value })}/>
-                                </td>
-                                <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="操作者" value={newReply.UP_User}
-                                           onChange={(e) => setNewReply({ ...newReply, UP_User: e.target.value })}/>
                                 </td>
                                 <td>
                                     <button
@@ -238,7 +233,6 @@ function TransList() {
                                 <th className="py-2 px-4 border">姓名</th>
                                 <th className="py-2 px-4 border">回覆說明</th>
                                 <th className="py-2 px-4 border">填表單時間</th>
-                                <th className="py-2 px-4 border">更新時間</th>
                                 <th className="py-2 px-4 border">操作</th>
                             </tr>
                             </thead>
@@ -250,7 +244,6 @@ function TransList() {
                                     <td className="py-2 px-4 border">{searchedTrans.StudentID}</td>
                                     <td className="py-2 px-4 border">{searchedTrans.Name}</td>
                                     <td className="py-2 px-4 border">{searchedTrans.Content}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.UP_Date}</td>
                                     <td className="py-2 px-4 border">{searchedTrans.UP_User}</td>
                                     <td className="py-2 px-4 flex justify-center border">
                                         <button
@@ -269,7 +262,6 @@ function TransList() {
                                         <td className="py-2 px-4 border">{trans.Name}</td>
                                         <td className="py-2 px-4 border">{trans.Content}</td>
                                         <td className="py-2 px-4 border">{trans.UP_Date}</td>
-                                        <td className="py-2 px-4 border">{trans.UP_User}</td>
                                         <td className="py-2 px-4 flex justify-center border">
                                             <button
                                                 className="px-4 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
