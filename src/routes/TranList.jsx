@@ -28,40 +28,40 @@ function TransList() {
         }
     };
 
-    const fetchTransData = () => {
-        fetch('/api/trans')
+    const fetchReplyData = () => {
+        fetch('/api/reply')
             .then((response) => response.json())
             .then((data) => setTransData(data))
             .catch((error) => console.error('Error fetching data:', error));
     };
 
     useEffect(() => {
-        fetchTransData();
+        fetchReplyData();
     }, []);
 
-    const [newTrans, setNewTrans] = useState({
-        AccID: '',
-        AtmID: '',
-        TranType: '',
-        TranNote: '',
-        UP_USR: '',
+
+    const [newReply, setNewReply] = useState({
+        Class: '',
+        StudentID: '',
+        Name: '',
+        Content: '',
+        UP_User: '',
     });
 
-
-    const addTransaction = (newTrans) => {
-        fetch('/api/trans', {
+    const addReply = (newReply) => {
+        fetch('/api/reply', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(newTrans),
+            body: JSON.stringify(newReply),
         })
             .then((response) => response.json())
             .then((data) => {
-                fetchTransData();  // 重新載入資料
+                fetchReplyData();  // 重新載入資料
                 setShowAlert(true);
             })
-            .catch((error) => console.error('Error adding new transaction:', error));
+            .catch((error) => console.error('Error adding new reply:', error));
         setTimeout(() => {
             setShowAlert(false);
         }, 3000);
@@ -73,7 +73,7 @@ function TransList() {
         })
             .then((response) => response.json())
             .then((data) => {
-                fetchTransData();  // 重新載入資料
+                fetchReplyData();  // 重新載入資料
                 setShowDeleteAlert(true);
             })
             .catch((error) => console.error('Error deleting transaction:', error));
@@ -112,7 +112,7 @@ function TransList() {
             if (response.ok) {
                 // 更新成功，關閉編輯視窗並重新載入交易數據
                 closeEditModal();
-                fetchTransData();
+                fetchReplyData();
 
                 if (searchedTrans) {
                     fetch(`/api/trans/${searchedTrans.TranID}`)
@@ -146,21 +146,22 @@ function TransList() {
                 <p className="text-center text-red-600 text-4xl">請先登入方可使用所有功能謝謝</p>
             ) : (
                 <div className="container m-4 rounded-lg border-4 border-gray-500 bg-gray-200 mx-auto  p-4">
-                    <h1 className="m-4 font-bold text-2xl">交易紀錄crud</h1>
+                    <h1 className="m-4 font-bold text-2xl">回覆紀錄 CRUD</h1>
                     <form className="flex flex-col md:flex-row justify-center items-center w-full md:w-2/3 mx-auto"
                           onSubmit={(e) => {
                               e.preventDefault();
-                              addTransaction(newTrans);
+                              addReply(newReply);
                           }}>
 
 
-                        <table className=" w-full  border-gray-500 bg-white border-2">
+
+                        <table className="w-full  border-gray-500 bg-white border-2">
                             <thead className="bg-gray-100">
                             <tr>
-                                <th className="py-2 px-4 border">銀行帳號</th>
-                                <th className="py-2 px-4 border">ATM編號</th>
-                                <th className="py-2 px-4 border">交易類型</th>
-                                <th className="py-2 px-4 border">交易說明</th>
+                                <th className="py-2 px-4 border">班級</th>
+                                <th className="py-2 px-4 border">學生編號</th>
+                                <th className="py-2 px-4 border">姓名</th>
+                                <th className="py-2 px-4 border">回覆內容</th>
                                 <th className="py-2 px-4 border">操作者</th>
                                 <th className="py-2 px-4 border"/>
                             </tr>
@@ -168,24 +169,24 @@ function TransList() {
                             <tbody>
                             <tr>
                                 <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="銀行帳號" value={newTrans.AccID}
-                                           onChange={(e) => setNewTrans({...newTrans, AccID: e.target.value})}/>
+                                    <input type="text" placeholder="班級" value={newReply.Class}
+                                           onChange={(e) => setNewReply({ ...newReply, Class: e.target.value })}/>
                                 </td>
                                 <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="ATM編號" value={newTrans.AtmID}
-                                           onChange={(e) => setNewTrans({...newTrans, AtmID: e.target.value})}/>
+                                    <input type="text" placeholder="學生編號" value={newReply.StudentID}
+                                           onChange={(e) => setNewReply({ ...newReply, StudentID: e.target.value })}/>
                                 </td>
                                 <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="交易類型" value={newTrans.TranType}
-                                           onChange={(e) => setNewTrans({...newTrans, TranType: e.target.value})}/>
+                                    <input type="text" placeholder="姓名" value={newReply.Name}
+                                           onChange={(e) => setNewReply({ ...newReply, Name: e.target.value })}/>
                                 </td>
                                 <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="交易說明" value={newTrans.TranNote}
-                                           onChange={(e) => setNewTrans({...newTrans, TranNote: e.target.value})}/>
+                                    <input type="text" placeholder="回覆內容" value={newReply.Content}
+                                           onChange={(e) => setNewReply({ ...newReply, Content: e.target.value })}/>
                                 </td>
                                 <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="操作者" value={newTrans.UP_USR}
-                                           onChange={(e) => setNewTrans({...newTrans, UP_USR: e.target.value})}/>
+                                    <input type="text" placeholder="操作者" value={newReply.UP_User}
+                                           onChange={(e) => setNewReply({ ...newReply, UP_User: e.target.value })}/>
                                 </td>
                                 <td>
                                     <button
@@ -239,10 +240,11 @@ function TransList() {
                                 <th className="py-2 px-4 border">交易說明</th>
                                 <th className="py-2 px-4 border">操作者</th>
                                 <th className="py-2 px-4 border">更新時間</th>
+                                <th className="py-2 px-4 border">操作</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {searchedTrans ? ( // 如果有查詢結果
+                            {searchedTrans ? (
                                 <tr>
                                     <td className="py-2 px-4 border">{searchedTrans.AccID}</td>
                                     <td className="py-2 px-4 border">{searchedTrans.TranID}</td>
@@ -254,13 +256,14 @@ function TransList() {
                                     <td className="py-2 px-4 border">{searchedTrans.UP_DATETIME}</td>
                                     <td className="py-2 px-4 flex justify-center border">
                                         <button
-                                            className=" px-4 h-8 mr-4 rounded-lg  text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
-                                            onClick={() => deleteTransaction(searchedTrans.TranID)}>刪除
+                                            className="px-4 h-8 mr-4 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
+                                            onClick={() => deleteTransaction(searchedTrans.TranID)}>
+                                            刪除
                                         </button>
-
                                         <button
-                                            className=" px-4 h-8 rounded-lg  text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
-                                            onClick={() => openEditModal(searchedTrans)}>編輯
+                                            className="px-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
+                                            onClick={() => openEditModal(searchedTrans)}>
+                                            編輯
                                         </button>
                                     </td>
                                 </tr>
@@ -277,19 +280,19 @@ function TransList() {
                                         <td className="py-2 px-4 border">{trans.UP_DATETIME}</td>
                                         <td className="py-2 px-4 flex justify-center border">
                                             <button
-                                                className=" px-4 mr-4 h-8 rounded-lg  text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
-                                                onClick={() => deleteTransaction(trans.TranID)}>刪除
+                                                className="px-4 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
+                                                onClick={() => deleteTransaction(trans.TranID)}>
+                                                刪除
                                             </button>
                                             {showDeleteAlert && (
-                                                <div
-                                                    className="absolute bottom-4 right-4 bg-red-500 text-white p-2 rounded shadow animate-slide-in-out"
-                                                >
+                                                <div className="absolute bottom-4 right-4 bg-red-500 text-white p-2 rounded shadow animate-slide-in-out">
                                                     刪除成功!
                                                 </div>
                                             )}
                                             <button
-                                                className=" px-4 h-8 rounded-lg  text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
-                                                onClick={() => openEditModal(trans)}>編輯
+                                                className="px-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
+                                                onClick={() => openEditModal(trans)}>
+                                                編輯
                                             </button>
                                         </td>
                                     </tr>
@@ -299,45 +302,54 @@ function TransList() {
                         </table>
                     </div>
                     {editedTrans && (
-                        <Modal  isOpen={editModalOpen} onClose={closeEditModal}>
-
+                        <Modal isOpen={editModalOpen} onClose={closeEditModal}>
                             <form onSubmit={handleEditSubmit}>
-                                <tbody>
-                                <tr>
-                                    <th className="py-2 px-4 border">銀行帳號</th>
-                                    <th className="py-2 px-4 border">ATM編號</th>
-                                    <th className="py-2 px-4 border">交易類型</th>
-                                    <th className="py-2 px-4 border">交易說明</th>
-                                    <th className="py-2 px-4 border">操作者</th>
-                                </tr>
-                                </tbody>
-                                <td><input type="text" placeholder="銀行帳號" value={editedTrans.AccID}
-                                           onChange={(e) => setEditedTrans({...editedTrans, AccID: e.target.value})}/>
-                                </td>
-                                <td><input type="text" placeholder="ATM編號" value={editedTrans.AtmID}
-                                           onChange={(e) => setEditedTrans({...editedTrans, AtmID: e.target.value})}/>
-                                </td>
-                                <td><input type="text" placeholder="交易類型" value={editedTrans.TranType}
-                                           onChange={(e) => setEditedTrans({
-                                               ...editedTrans,
-                                               TranType: e.target.value
-                                           })}/>
-                                </td>
-                                <td><input type="text" placeholder="交易說明" value={editedTrans.TranNote}
-                                           onChange={(e) => setEditedTrans({
-                                               ...editedTrans,
-                                               TranNote: e.target.value
-                                           })}/>
-                                </td>
-                                <td><input type="text" placeholder="操作者" value={editedTrans.UP_USR}
-                                           onChange={(e) => setEditedTrans({...editedTrans, UP_USR: e.target.value})}/>
-                                </td>
-
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <th className="py-2 px-4 border">交易類型</th>
+                                        <th className="py-2 px-4 border">交易說明</th>
+                                        <th className="py-2 px-4 border">操作者</th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                placeholder="交易類型"
+                                                value={editedTrans.TranType}
+                                                onChange={(e) =>
+                                                    setEditedTrans({ ...editedTrans, TranType: e.target.value })
+                                                }
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                placeholder="交易說明"
+                                                value={editedTrans.TranNote}
+                                                onChange={(e) =>
+                                                    setEditedTrans({ ...editedTrans, TranNote: e.target.value })
+                                                }
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                placeholder="操作者"
+                                                value={editedTrans.UP_USR}
+                                                onChange={(e) =>
+                                                    setEditedTrans({ ...editedTrans, UP_USR: e.target.value })
+                                                }
+                                            />
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                                 <button
-                                    className=" px-4 h-8 rounded-lg  text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
-                                    type="submit">更新交易
+                                    className="px-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
+                                    type="submit">
+                                    更新交易
                                 </button>
-
                             </form>
                         </Modal>
                     )}

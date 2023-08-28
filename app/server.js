@@ -26,7 +26,7 @@ const config = {
     user: 'sa',
     password: 'YourStrong@Passw0rd',
     server: 'localhost',
-    database: 'BANK',
+    database: 'NTUNHS',
     options: {
         encrypt: true, // 使用 SSL
         trustServerCertificate: true // 信任自簽名憑證
