@@ -17,7 +17,7 @@ USE NTUNHS;
 
 CREATE TABLE Account
 (
-    ID int PRIMARY KEY,
+    ID int identity(1,1) PRIMARY KEY,
     AccID varchar(10) UNIQUE,
     Password varchar(100),
     Balance int,
@@ -28,16 +28,16 @@ CREATE TABLE Account
 );
 DECLARE @CURRENT_TS datetimeoffset = GETDATE();
 INSERT INTO ACCOUNT
-(ID, AccID, Password, Balance, BranchID, AccType, UP_Date, UP_User)
+( AccID, Password, Balance, BranchID, AccType, UP_Date, UP_User)
 VALUES
-    (1, 'admin', 'admin', 5000, 10, 'B01', @CURRENT_TS, '0');
+    ( 'admin', 'admin', 5000, 10, 'B01', @CURRENT_TS, '0');
 GO
 
 select * from Account;
 
 CREATE TABLE Reply
 (
-    ID int PRIMARY KEY,
+    ID int PRIMARY KEY identity(1,1),
     Class varchar(10),
     StudentID varchar(10),
     Name varchar(40),
@@ -49,11 +49,11 @@ GO
 
 DECLARE @CURRENT_TS datetimeoffset = GETDATE();
 INSERT INTO Reply
-(ID, Class, StudentID, Name, Content, UP_Date, UP_User)
+( Class, StudentID, Name, Content, UP_Date, UP_User)
 VALUES
-    (1, 'ClassA', '001', 'LJ KUO', '歡迎加入北護大家庭，與我們一同開啟美好校園時光！', @CURRENT_TS, '0'),
-    (2, 'ClassB', '002', 'CW Lin', '歡迎來到北護！', @CURRENT_TS, '0'),
-    (3, 'ClassC', '003', 'DW Wang', '歡迎新同學，一起學習成長！', @CURRENT_TS, '0');
+    ( 'ClassA', '001', 'LJ KUO', '歡迎加入北護大家庭，與我們一同開啟美好校園時光！', @CURRENT_TS, '0'),
+    ( 'ClassB', '002', 'CW Lin', '歡迎來到北護！', @CURRENT_TS, '0'),
+    ( 'ClassC', '003', 'DW Wang', '歡迎新同學，一起學習成長！', @CURRENT_TS, '0');
 GO
 
 SELECT * FROM Account;

@@ -68,7 +68,7 @@ function TransList() {
     };
 
     const deleteTransaction = (tranID) => {
-        fetch(`/api/trans/${tranID}`, {
+        fetch(`/api/reply/${tranID}`, {
             method: 'DELETE',
         })
             .then((response) => response.json())
@@ -101,7 +101,7 @@ function TransList() {
         e.preventDefault();
 
         try {
-            const response = await fetch(`/api/trans/${editedTrans.TranID}`, {
+            const response = await fetch(`/api/reply/${editedTrans.TranID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ function TransList() {
             return;
         }
 
-        fetch(`/api/trans/${searchTranID}`)
+        fetch(`/api/reply/${searchTranID}`)
             .then((response) => response.json())
             .then((data) => setSearchedTrans(data))
             .catch((error) => console.error('Error searching transaction:', error));
@@ -197,7 +197,7 @@ function TransList() {
                                         <div
                                             className="absolute bottom-4 right-4 bg-green-500 text-white p-2 rounded shadow animate-slide-in-out"
                                         >
-                                            交易建立成功！
+                                           建立成功！
                                         </div>
                                     )}
 
@@ -232,56 +232,48 @@ function TransList() {
                         <table className="min-w-full bg-white border-4 border-gray-500">
                             <thead>
                             <tr>
-                                <th className="py-2 px-4 border">銀行帳號</th>
-                                <th className="py-2 px-4 border">交易序號</th>
-                                <th className="py-2 px-4 border">交易時間</th>
-                                <th className="py-2 px-4 border">ATM編號</th>
-                                <th className="py-2 px-4 border">交易類型</th>
-                                <th className="py-2 px-4 border">交易說明</th>
-                                <th className="py-2 px-4 border">操作者</th>
+                                <th className="py-2 px-4 border">序號</th>
+                                <th className="py-2 px-4 border">班級</th>
+                                <th className="py-2 px-4 border">學號</th>
+                                <th className="py-2 px-4 border">姓名</th>
+                                <th className="py-2 px-4 border">回覆說明</th>
+                                <th className="py-2 px-4 border">填表單時間</th>
                                 <th className="py-2 px-4 border">更新時間</th>
                                 <th className="py-2 px-4 border">操作</th>
                             </tr>
                             </thead>
                             <tbody>
                             {searchedTrans ? (
-                                <tr>
-                                    <td className="py-2 px-4 border">{searchedTrans.AccID}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.TranID}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.TranTime}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.AtmID}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.TranType}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.TranNote}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.UP_USR}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.UP_DATETIME}</td>
+                                <tr className="bg-gray-100">
+                                    <td className="py-2 px-4 border">{searchedTrans.ID}</td>
+                                    <td className="py-2 px-4 border">{searchedTrans.Class}</td>
+                                    <td className="py-2 px-4 border">{searchedTrans.StudentID}</td>
+                                    <td className="py-2 px-4 border">{searchedTrans.Name}</td>
+                                    <td className="py-2 px-4 border">{searchedTrans.Content}</td>
+                                    <td className="py-2 px-4 border">{searchedTrans.UP_Date}</td>
+                                    <td className="py-2 px-4 border">{searchedTrans.UP_User}</td>
                                     <td className="py-2 px-4 flex justify-center border">
                                         <button
-                                            className="px-4 h-8 mr-4 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
-                                            onClick={() => deleteTransaction(searchedTrans.TranID)}>
+                                            className="px-4 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
+                                            onClick={() => deleteTransaction(searchedTrans.ID)}>
                                             刪除
-                                        </button>
-                                        <button
-                                            className="px-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
-                                            onClick={() => openEditModal(searchedTrans)}>
-                                            編輯
                                         </button>
                                     </td>
                                 </tr>
                             ) : (
                                 transData.map((trans, index) => (
                                     <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : ''}>
-                                        <td className="py-2 px-4 border">{trans.AccID}</td>
-                                        <td className="py-2 px-4 border">{trans.TranID}</td>
-                                        <td className="py-2 px-4 border">{trans.TranTime}</td>
-                                        <td className="py-2 px-4 border">{trans.AtmID}</td>
-                                        <td className="py-2 px-4 border">{trans.TranType}</td>
-                                        <td className="py-2 px-4 border">{trans.TranNote}</td>
-                                        <td className="py-2 px-4 border">{trans.UP_USR}</td>
-                                        <td className="py-2 px-4 border">{trans.UP_DATETIME}</td>
+                                        <td className="py-2 px-4 border">{trans.ID}</td>
+                                        <td className="py-2 px-4 border">{trans.Class}</td>
+                                        <td className="py-2 px-4 border">{trans.StudentID}</td>
+                                        <td className="py-2 px-4 border">{trans.Name}</td>
+                                        <td className="py-2 px-4 border">{trans.Content}</td>
+                                        <td className="py-2 px-4 border">{trans.UP_Date}</td>
+                                        <td className="py-2 px-4 border">{trans.UP_User}</td>
                                         <td className="py-2 px-4 flex justify-center border">
                                             <button
                                                 className="px-4 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
-                                                onClick={() => deleteTransaction(trans.TranID)}>
+                                                onClick={() => deleteTransaction(trans.ID)}>
                                                 刪除
                                             </button>
                                             {showDeleteAlert && (
@@ -289,71 +281,15 @@ function TransList() {
                                                     刪除成功!
                                                 </div>
                                             )}
-                                            <button
-                                                className="px-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
-                                                onClick={() => openEditModal(trans)}>
-                                                編輯
-                                            </button>
+
                                         </td>
                                     </tr>
                                 ))
                             )}
                             </tbody>
                         </table>
-                    </div>
-                    {editedTrans && (
-                        <Modal isOpen={editModalOpen} onClose={closeEditModal}>
-                            <form onSubmit={handleEditSubmit}>
-                                <table>
-                                    <tbody>
-                                    <tr>
-                                        <th className="py-2 px-4 border">交易類型</th>
-                                        <th className="py-2 px-4 border">交易說明</th>
-                                        <th className="py-2 px-4 border">操作者</th>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                placeholder="交易類型"
-                                                value={editedTrans.TranType}
-                                                onChange={(e) =>
-                                                    setEditedTrans({ ...editedTrans, TranType: e.target.value })
-                                                }
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                placeholder="交易說明"
-                                                value={editedTrans.TranNote}
-                                                onChange={(e) =>
-                                                    setEditedTrans({ ...editedTrans, TranNote: e.target.value })
-                                                }
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                placeholder="操作者"
-                                                value={editedTrans.UP_USR}
-                                                onChange={(e) =>
-                                                    setEditedTrans({ ...editedTrans, UP_USR: e.target.value })
-                                                }
-                                            />
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <button
-                                    className="px-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
-                                    type="submit">
-                                    更新交易
-                                </button>
-                            </form>
-                        </Modal>
-                    )}
 
+                    </div>
                 </div>
             )}
             <style>
