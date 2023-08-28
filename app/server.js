@@ -16,7 +16,7 @@ app.use(session({
     cookie: {
         secure: false, // 改成 true 如果你使用 HTTPS
         httpOnly: true,
-        maxAge: 60000 // 1 minute
+        maxAge: 6000000 // 1 minute
     }
 }));
 
