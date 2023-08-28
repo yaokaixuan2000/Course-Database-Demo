@@ -40,6 +40,7 @@ CREATE TABLE Reply
     ID int PRIMARY KEY identity(1,1),
     Class varchar(10),
     StudentID varchar(10),
+    Gender varchar(10),
     Name varchar(40),
     Content varchar(max),
     UP_Date datetime  DEFAULT GETDATE()  ,
@@ -48,11 +49,11 @@ CREATE TABLE Reply
 GO
 
 INSERT INTO Reply
-( Class, StudentID, Name, Content, UP_User)
+( Class, StudentID, Gender,Name, Content, UP_User)
 VALUES
-    ( 'ClassA', '001', 'LJ KUO', '歡迎加入北護大家庭，與我們一同開啟美好校園時光！', '0'),
-    ( 'ClassB', '002', 'CW Lin', '歡迎來到北護！', '0'),
-    ( 'ClassC', '003', 'DW Wang', '歡迎新同學，一起學習成長！', '0');
+    ( 'ClassA', '001','男', 'LJ KUO', '歡迎加入北護大家庭，與我們一同開啟美好校園時光！', '0'),
+    ( 'ClassB', '002','男', 'CW Lin', '歡迎來到北護！', '0'),
+    ( 'ClassC', '003','男', 'DW Wang', '歡迎新同學，一起學習成長！', '0');
 GO
 
 SELECT * FROM Account;

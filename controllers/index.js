@@ -44,7 +44,7 @@ router.get('/reply', async (req, res) => {
     try {
         const pool = req.app.locals.pool;
 
-        const result = await pool.request().query('SELECT ID, Class, StudentID, Name, Content, CONVERT(varchar, UP_Date, 23) AS UP_Date, UP_User FROM Reply;');
+        const result = await pool.request().query('SELECT ID, Class, StudentID, Name,Gender, Content, CONVERT(varchar, UP_Date, 23) AS UP_Date, UP_User FROM Reply;');
 
         console.log(result);
 
@@ -64,9 +64,10 @@ router.post('/reply', async (req, res) => {
             .input('Class', sql.NVarChar, newReply.Class)
             .input('StudentID', sql.NVarChar, newReply.StudentID)
             .input('Name', sql.NVarChar, newReply.Name)
+            .input('Gender', sql.NVarChar, newReply.Gender)
             .input('Content', sql.NVarChar, newReply.Content)
             .input('UP_User', sql.NVarChar, newReply.UP_User)
-            .query('INSERT INTO Reply (Class, StudentID, Name, Content, UP_User) VALUES (@Class, @StudentID, @Name, @Content, @UP_User)');
+            .query('INSERT INTO Reply (Class, StudentID, Name,Gender, Content, UP_User) VALUES (@Class, @StudentID, @Name,@Gender, @Content, @UP_User)');
 
         res.status(201).json({ message: 'Reply added successfully' });
     } catch (err) {
@@ -82,7 +83,7 @@ router.get('/reply/:ID', async (req, res) => {
 
         const result = await pool.request()
             .input('ID', sql.NVarChar, ID)
-            .query('SELECT ID, Class, StudentID, Name, Content, CONVERT(varchar, UP_Date, 23) AS UP_Date, UP_User FROM Reply WHERE ID = @ID');
+            .query('SELECT ID, Class, StudentID, Name,Gender, Content, CONVERT(varchar, UP_Date, 23) AS UP_Date, UP_User FROM Reply WHERE ID = @ID');
 
         if (result.recordset.length === 0) {
             res.status(404).send('Reply not found');

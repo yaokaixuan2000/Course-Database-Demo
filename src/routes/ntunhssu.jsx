@@ -1,9 +1,40 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import { Icon } from '@iconify/react';
 // import ntunhsT.png
 import ntunhsT from './ntunhsT.png';
 import { Helmet } from 'react-helmet';
+/* eslint-disable no-unused-vars */
+import Modal from './Modal.jsx';
+import {checkLoginStatus} from './checkLogin.jsx';
 const Ntunhssu  = () => {
+    const [showAlert, setShowAlert] = useState(false);
+    const [newReply, setNewReply] = useState({
+        Class: '',
+        StudentID: '',
+        Name: '',
+        Gender: '',
+        Content: '',
+        UP_User: '',
+    });
+
+    const addReply = (newReply) => {
+        fetch('/api/reply', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newReply),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setShowAlert(true);
+            })
+            .catch((error) => console.error('Error adding new reply:', error));
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 3000);
+    };
+
     return (
         <div className="bg-gray-100 min-h-screen">
             <Helmet>
@@ -34,27 +65,41 @@ const Ntunhssu  = () => {
                 <section className="mb-8">
                     <h2 className="text-xl font-bold mb-4">靜態展表單</h2>
                     <div className="bg-white rounded-lg p-4 shadow">
-                        <form>
+                        <form
+                              onSubmit={(e) => {
+                                  e.preventDefault();
+                                  addReply(newReply);
+                              }}>
                             <div className="mb-4">
                                 <label htmlFor="class" className="block text-sm font-bold">班級</label>
-                                <input type="text" id="class" name="class" className="w-full p-2 border rounded"/>
+                                <input  onChange={(e) => setNewReply({ ...newReply, Class: e.target.value })}
+                                    type="text" id="class" name="class" className="w-full p-2 border rounded" value={newReply.Class} required />
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="studentId" className="block text-sm font-bold">學號</label>
-                                <input type="text" id="studentId" name="studentId" className="w-full p-2 border rounded"/>
+                                <input  onChange={(e) => setNewReply({ ...newReply, StudentID: e.target.value })}
+                                    type="text" value={newReply.StudentID} id="studentId" name="studentId" className="w-full p-2 border rounded" required />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="name" className="block text-sm font-bold">性別</label>
+                                <input  onChange={(e) => setNewReply({ ...newReply, Gender: e.target.value })}
+                                    type="text" value={newReply.Gender} id="name" name="name" className="w-full p-2 border rounded" required />
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="name" className="block text-sm font-bold">姓名</label>
-                                <input type="text" id="name" name="name" className="w-full p-2 border rounded"/>
+                                <input  onChange={(e) => setNewReply({ ...newReply, Name: e.target.value })}
+                                     type="text" value={newReply.Name} id="name" name="name" className="w-full p-2 border rounded" required />
                             </div>
                             <div className="mb-4">
-                                <label htmlFor="name" className="block text-sm font-bold">有什麼想對學生會說的嗎</label>
-                                <input type="text" id="name" name="name" className="w-full p-2 border rounded"/>
+                                <label htmlFor="message" className="block text-sm font-bold">有什麼想對學生會說的嗎</label>
+                                <input  onChange={(e) => setNewReply({ ...newReply, Content: e.target.value })}
+                                    type="text"  value={newReply.Content} id="message" name="message" className="w-full p-2 border rounded" required />
                             </div>
                             <button type="submit" className="bg-blue-500 text-white p-2 rounded">
                                 送出
                             </button>
                         </form>
+
                     </div>
                 </section>
 
