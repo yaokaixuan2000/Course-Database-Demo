@@ -12,7 +12,7 @@ function TransList() {
     const [transData, setTransData] = useState([]);
     const [searchTranID, setSearchTranID] = useState('');
     const [searchedTrans, setSearchedTrans] = useState(null);
-
+    const [genderStats, setGenderStats] = useState([]);
     const checkLoginStatus = async () => {
         try {
             const response = await fetch('/api/check-auth');
@@ -28,15 +28,25 @@ function TransList() {
         }
     };
 
+
     const fetchReplyData = () => {
         fetch('/api/reply')
             .then((response) => response.json())
-            .then((data) => setTransData(data))
-            .catch((error) => console.error('Error fetching data:', error));
+            .then((data) =>  setTransData(data))
+            .catch((error) => console.error('Error fetching reply data:', error));
     };
+
+    const fetchGenderData = () => {
+        fetch('/api/reply/gender')
+            .then((response) => response.json())
+            .then((data) => setGenderStats(data))
+            .catch((error) => console.error('Error fetching gender data:', error));
+    };
+    genderStats.map((item) => console.log(item.NumberOfStudents))
 
     useEffect(() => {
         fetchReplyData();
+        fetchGenderData();
     }, []);
 
 
@@ -148,6 +158,11 @@ function TransList() {
             ) : (
                 <div className="container m-4 rounded-lg border-4 border-gray-500 bg-gray-200 mx-auto  p-4">
                     <h1 className="m-4 font-bold text-2xl">回覆紀錄 CRUD</h1>
+                    <div>
+                        <p>男生總數: {genderStats.find(item => item.Gender === 'male')?.NumberOfStudents || 0}</p>
+                        <p>女生總數: {genderStats.find(item => item.Gender === 'female')?.NumberOfStudents || 0}</p>
+                    </div>
+
                     <form className="flex flex-col md:flex-row justify-center items-center w-full md:w-2/3 mx-auto"
                           onSubmit={(e) => {
                               e.preventDefault();

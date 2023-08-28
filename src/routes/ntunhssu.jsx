@@ -53,15 +53,17 @@ const Ntunhssu = () => {
             <Helmet>
                 <title>北護學生會-靜態展</title>
             </Helmet>
-            <header className="bg-blue-500/40 text-black/50 font-bold text-center p-4">
+            <header className="bg-blue-500/40 text-black/70 font-bold text-center p-4">
                 <h1 className="text-2xl">學生會</h1>
+                Student Union of NTUNHS
+
             </header>
 
             <main className="p-4">
                 <section className="mb-8">
                     <h2 className="text-xl font-bold mb-4">給新生的話</h2>
                     <div className="bg-white rounded-lg p-4 shadow">
-                        <p>我們是北護學生會，歡迎你們加入北護大家庭，與我們一同開啟美好校園時光！</p>
+                        <p>我們是北護學生會，歡迎你們加入北護大家庭，與我們一同開啟美好校園時光吧！</p>
                     </div>
 
                 </section>
@@ -70,7 +72,7 @@ const Ntunhssu = () => {
                     <div className=" bg-white rounded-lg p-4 shadow">
                         <p className=" font-bold m-2">我們推出紀念衫囉!</p>
                         <img className="border-2 border-black" src={ntunhsT} alt="北護校園景色"></img>
-                        <p className=" font-bold m-2">有興趣的同學可以到學生會IG了解詳細資訊</p>
+                        <p className=" font-bold m-2">有興趣的同學可以到學生會IG更多!</p>
                     </div>
 
                 </section>
@@ -85,19 +87,19 @@ const Ntunhssu = () => {
                                 openEditModal();
                             }}>
                             <div className="mb-4">
-                                <label htmlFor="class" className="block text-sm font-bold">班級</label>
+                                <label htmlFor="class" className="block text-xl font-bold">班級</label>
                                 <input onChange={(e) => setNewReply({...newReply, Class: e.target.value})}
                                        type="text" id="class" name="class" className="w-full p-2 border rounded"
                                        value={newReply.Class} required/>
                             </div>
                             <div className="mb-4">
-                                <label htmlFor="studentId" className="block text-sm font-bold">學號</label>
+                                <label htmlFor="studentId" className="block text-xl font-bold">學號</label>
                                 <input onChange={(e) => setNewReply({...newReply, StudentID: e.target.value})}
                                        type="text" value={newReply.StudentID} id="studentId" name="studentId"
                                        className="w-full p-2 border rounded" required/>
                             </div>
                             <div className="mb-4">
-                                <label htmlFor="name" className="block text-sm font-bold">性別</label>
+                                <label htmlFor="name" className="block text-xl font-bold">性別</label>
                                 <select
                                     onChange={(e) => setNewReply({...newReply, Gender: e.target.value})}
                                     value={newReply.Gender}
@@ -112,19 +114,19 @@ const Ntunhssu = () => {
                                 </select>
                             </div>
                             <div className="mb-4">
-                                <label htmlFor="name" className="block text-sm font-bold">姓名</label>
+                                <label htmlFor="name" className="block text-xl font-bold">姓名</label>
                                 <input onChange={(e) => setNewReply({...newReply, Name: e.target.value})}
                                        type="text" value={newReply.Name} id="name" name="name"
                                        className="w-full p-2 border rounded" required/>
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="message"
-                                       className="block text-sm font-bold">有什麼想對學生會說的嗎</label>
-                                <input onChange={(e) => setNewReply({...newReply, Content: e.target.value})}
-                                       type="text" value={newReply.Content} id="message" name="message"
-                                       className="w-full p-2 border rounded" required/>
+                                       className="block text-xl font-bold">學生會許願區~</label>
+                                <textarea onChange={(e) => setNewReply({...newReply, Content: e.target.value})}
+                                        value={newReply.Content} id="message" name="message"
+                                       className="w-full h-24 p-2 border rounded" required/>
                             </div>
-                            <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+                            <button type="submit" className="bg-blue-500 text-xl font-bold text-white p-2 rounded">
                                 送出
                             </button>
                         </form>
@@ -140,8 +142,8 @@ const Ntunhssu = () => {
                             href="https://www.instagram.com/ntunhssu_21/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className=" flex text-black underline">
-                            <Icon className="text-2xl mr-2" icon="skill-icons:instagram"/>關注我們的Instagram
+                            className=" flex text-black underline mx-auto justify-center">
+                            <Icon className="text-2xl mr-2" icon="skill-icons:instagram"/>關注我們的Instagram<Icon className="text-2xl ml-2" icon="skill-icons:instagram"/>
                         </a>
                     </div>
                 </section>
@@ -154,8 +156,8 @@ const Ntunhssu = () => {
                 <div>
                     <img className="border-2 border-black" src={ntunhsT} alt="北護校園景色"></img>
                 </div>
-                <div className="m-4 text-center font-bold justify-center">將表單拿給攤位服務人員!<p>希望你能在靜態展玩得開心~</p>
-                    <p className="mt-4">最後記得支持我們的衣服喔!!!</p></div>
+                <div className="m-4   text-center font-bold justify-center">將表單拿給攤位服務人員!<p>希望你能在靜態展玩得開心~</p>
+                    <p className="mt-4 ">最後記得支持我們的衣服喔!!!</p></div>
             </Modal>}
         </div>
 

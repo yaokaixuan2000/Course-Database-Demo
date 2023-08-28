@@ -30,7 +30,7 @@ DECLARE @CURRENT_TS datetimeoffset = GETDATE();
 INSERT INTO ACCOUNT
 ( AccID, Password, Balance, BranchID, AccType, UP_Date, UP_User)
 VALUES
-    ( 'admin', 'admin', 5000, 10, 'B01', @CURRENT_TS, '0');
+    ( 'ntunhssu', 'ntunhssuu', 5000, 10, 'B01', @CURRENT_TS, '0');
 GO
 
 select * from Account;
@@ -51,10 +51,14 @@ GO
 INSERT INTO Reply
 ( Class, StudentID, Gender,Name, Content, UP_User)
 VALUES
-    ( 'ClassA', '001','男', 'LJ KUO', '歡迎加入北護大家庭，與我們一同開啟美好校園時光！', '0'),
-    ( 'ClassB', '002','男', 'CW Lin', '歡迎來到北護！', '0'),
-    ( 'ClassC', '003','男', 'DW Wang', '歡迎新同學，一起學習成長！', '0');
+    ( 'ClassA', '001','男性', 'LJ KUO', '歡迎加入北護大家庭，與我們一同開啟美好校園時光！', '0'),
+    ( 'ClassB', '002','男性', 'CW Lin', '歡迎來到北護！', '0'),
+    ( 'ClassC', '003','女性', 'DW Wang', '歡迎新同學，一起學習成長！', '0');
 GO
 
 SELECT * FROM Account;
 SELECT * FROM Reply;
+
+SELECT gender, COUNT(*) AS NumberOfStudents
+FROM reply
+GROUP BY gender;
