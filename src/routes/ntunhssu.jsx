@@ -1,12 +1,13 @@
-import React, {useContext, useState} from 'react';
-import { Icon } from '@iconify/react';
+import React, {useState} from 'react';
+import {Icon} from '@iconify/react';
 // import ntunhsT.png
 import ntunhsT from './ntunhsT.png';
-import { Helmet } from 'react-helmet';
+import {Helmet} from 'react-helmet';
 /* eslint-disable no-unused-vars */
 import Modal from './Modal.jsx';
 import {checkLoginStatus} from './checkLogin.jsx';
-const Ntunhssu  = () => {
+
+const Ntunhssu = () => {
     const [showAlert, setShowAlert] = useState(false);
     const [newReply, setNewReply] = useState({
         Class: '',
@@ -32,7 +33,19 @@ const Ntunhssu  = () => {
             .catch((error) => console.error('Error adding new reply:', error));
         setTimeout(() => {
             setShowAlert(false);
-        }, 3000);
+        }, 3000000);
+    };
+
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [editedTrans, setEditedTrans] = useState(null);
+
+    const openEditModal = () => {
+        setEditModalOpen(true);
+    };
+
+    const closeEditModal = () => {
+        setEditModalOpen(false);
+        setShowAlert(false); // 關閉 Modal 時同時也關閉 showAlert
     };
 
     return (
@@ -66,34 +79,50 @@ const Ntunhssu  = () => {
                     <h2 className="text-xl font-bold mb-4">靜態展表單</h2>
                     <div className="bg-white rounded-lg p-4 shadow">
                         <form
-                              onSubmit={(e) => {
-                                  e.preventDefault();
-                                  addReply(newReply);
-                              }}>
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                addReply(newReply);
+                                openEditModal();
+                            }}>
                             <div className="mb-4">
                                 <label htmlFor="class" className="block text-sm font-bold">班級</label>
-                                <input  onChange={(e) => setNewReply({ ...newReply, Class: e.target.value })}
-                                    type="text" id="class" name="class" className="w-full p-2 border rounded" value={newReply.Class} required />
+                                <input onChange={(e) => setNewReply({...newReply, Class: e.target.value})}
+                                       type="text" id="class" name="class" className="w-full p-2 border rounded"
+                                       value={newReply.Class} required/>
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="studentId" className="block text-sm font-bold">學號</label>
-                                <input  onChange={(e) => setNewReply({ ...newReply, StudentID: e.target.value })}
-                                    type="text" value={newReply.StudentID} id="studentId" name="studentId" className="w-full p-2 border rounded" required />
+                                <input onChange={(e) => setNewReply({...newReply, StudentID: e.target.value})}
+                                       type="text" value={newReply.StudentID} id="studentId" name="studentId"
+                                       className="w-full p-2 border rounded" required/>
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="name" className="block text-sm font-bold">性別</label>
-                                <input  onChange={(e) => setNewReply({ ...newReply, Gender: e.target.value })}
-                                    type="text" value={newReply.Gender} id="name" name="name" className="w-full p-2 border rounded" required />
+                                <select
+                                    onChange={(e) => setNewReply({...newReply, Gender: e.target.value})}
+                                    value={newReply.Gender}
+                                    id="gender"
+                                    name="gender"
+                                    className="w-full p-2 border rounded"
+                                    required
+                                >
+                                    <option value="">請選擇性別</option>
+                                    <option value="男性">男性</option>
+                                    <option value="女性">女性</option>
+                                </select>
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="name" className="block text-sm font-bold">姓名</label>
-                                <input  onChange={(e) => setNewReply({ ...newReply, Name: e.target.value })}
-                                     type="text" value={newReply.Name} id="name" name="name" className="w-full p-2 border rounded" required />
+                                <input onChange={(e) => setNewReply({...newReply, Name: e.target.value})}
+                                       type="text" value={newReply.Name} id="name" name="name"
+                                       className="w-full p-2 border rounded" required/>
                             </div>
                             <div className="mb-4">
-                                <label htmlFor="message" className="block text-sm font-bold">有什麼想對學生會說的嗎</label>
-                                <input  onChange={(e) => setNewReply({ ...newReply, Content: e.target.value })}
-                                    type="text"  value={newReply.Content} id="message" name="message" className="w-full p-2 border rounded" required />
+                                <label htmlFor="message"
+                                       className="block text-sm font-bold">有什麼想對學生會說的嗎</label>
+                                <input onChange={(e) => setNewReply({...newReply, Content: e.target.value})}
+                                       type="text" value={newReply.Content} id="message" name="message"
+                                       className="w-full p-2 border rounded" required/>
                             </div>
                             <button type="submit" className="bg-blue-500 text-white p-2 rounded">
                                 送出
@@ -104,7 +133,6 @@ const Ntunhssu  = () => {
                 </section>
 
 
-
                 <section className="mb-8">
                     <h2 className="text-xl font-bold mb-4">聯絡我們</h2>
                     <div className="bg-white rounded-lg p-4 shadow">
@@ -113,7 +141,7 @@ const Ntunhssu  = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className=" flex text-black underline">
-                            <Icon className="text-2xl mr-2" icon="skill-icons:instagram" />關注我們的Instagram
+                            <Icon className="text-2xl mr-2" icon="skill-icons:instagram"/>關注我們的Instagram
                         </a>
                     </div>
                 </section>
@@ -122,8 +150,16 @@ const Ntunhssu  = () => {
             <footer className="bg-blue-500/40 text-black/50 font-bold text-white text-center p-2">
                 <p>版權所有 &copy; 學生會</p>
             </footer>
+            {showAlert && <Modal isOpen={editModalOpen} onClose={closeEditModal}>
+                <div>
+                    <img className="border-2 border-black" src={ntunhsT} alt="北護校園景色"></img>
+                </div>
+                <div className="m-4 text-center font-bold justify-center">將表單拿給攤位服務人員!<p>希望你能在靜態展玩得開心~</p>
+                    <p className="mt-4">最後記得支持我們的衣服喔!!!</p></div>
+            </Modal>}
         </div>
+
     );
 };
 
-export default Ntunhssu ;
+export default Ntunhssu;
