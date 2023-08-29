@@ -43,7 +43,7 @@ const Root = () => {
     return (
         <div className="bg-gray-200 h-screen flex justify-center items-center">
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
-                <h1 className="text-2xl mb-4">Login</h1>
+                <h1 className="text-2xl text-center font-bold mb-4">學生會問卷管理網站</h1>
                 <form onSubmit={handleLogin}>
                     <div className="mb-4">
                         <label htmlFor="username" className="block text-sm font-medium text-gray-600">Username</label>

@@ -44,7 +44,7 @@ router.get('/reply', async (req, res) => {
     try {
         const pool = req.app.locals.pool;
 
-        const result = await pool.request().query('SELECT ID, Class, StudentID, Name,Gender, Content, CONVERT(varchar, UP_Date, 23) AS UP_Date, UP_User FROM Reply;');
+        const result = await pool.request().query('SELECT ID, Class, StudentID, Name,Gender, Content, CONVERT(varchar, UP_Date, 20) AS UP_Date, UP_User FROM Reply;');
 
         console.log(result);
 
@@ -54,6 +54,8 @@ router.get('/reply', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 router.post('/reply', async (req, res) => {
     try {
@@ -66,8 +68,8 @@ router.post('/reply', async (req, res) => {
             .input('Name', sql.NVarChar, newReply.Name)
             .input('Gender', sql.NVarChar, newReply.Gender)
             .input('Content', sql.NVarChar, newReply.Content)
-            .input('UP_User', sql.NVarChar, newReply.UP_User)
-            .query('INSERT INTO Reply (Class, StudentID, Name,Gender, Content, UP_User) VALUES (@Class, @StudentID, @Name,@Gender, @Content, @UP_User)');
+            .input('UP_Date', sql.NVarChar, newReply.UP_Date)
+            .query('INSERT INTO Reply (Class, StudentID, Name,Gender, Content, UP_Date) VALUES (@Class, @StudentID, @Name,@Gender, @Content, @UP_Date)');
 
         res.status(201).json({ message: 'Reply added successfully' });
     } catch (err) {
@@ -75,6 +77,26 @@ router.post('/reply', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+router.get('/reply/gender', async (req, res) => {
+    try {
+        const pool = req.app.locals.pool;
+
+        const result = await pool.request().query(
+            `SELECT Gender, COUNT(*) AS NumberOfStudents 
+             FROM Reply 
+             GROUP BY Gender
+             UNION ALL
+             SELECT '總數' AS Gender, COUNT(*) AS NumberOfStudents 
+             FROM Reply;`
+        );
+
+        res.json(result.recordset);
+    } catch (err) {
+        console.error('Error querying Gender Count', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 router.get('/reply/:ID', async (req, res) => {
     try {
@@ -83,7 +105,7 @@ router.get('/reply/:ID', async (req, res) => {
 
         const result = await pool.request()
             .input('ID', sql.NVarChar, ID)
-            .query('SELECT ID, Class, StudentID, Name,Gender, Content, CONVERT(varchar, UP_Date, 23) AS UP_Date, UP_User FROM Reply WHERE ID = @ID');
+            .query('SELECT ID, Class, StudentID, Name,Gender, Content, CONVERT(varchar, UP_Date, 20) AS UP_Date, UP_User FROM Reply WHERE ID = @ID');
 
         if (result.recordset.length === 0) {
             res.status(404).send('Reply not found');
@@ -118,20 +140,32 @@ router.delete('/reply/:ID', async (req, res) => {
     }
 });
 
+router.get('/len', async (req, res) => {
+    try {
+        const pool = req.app.locals.pool;
+
+        const result = await pool.request().query('SELECT ID, Class, StudentID, Name, Gender, Content, CONVERT(varchar, UP_Date, 20) AS UP_Date, UP_User, LEN(Content) AS ContentLength FROM Reply ORDER BY ContentLength DESC;');
+
+        console.log(result);
+
+        res.json(result.recordset);
+    } catch (err) {
+        console.error('Error querying Reply table by content length', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
 router.put('/reply/:ID', async (req, res) => {
     try {
         const pool = req.app.locals.pool;
         const { ID } = req.params;
-        const updatedReply = req.body;
 
         const result = await pool.request()
             .input('ID', sql.NVarChar, ID)
-            .input('Class', sql.NVarChar, updatedReply.Class)
-            .input('StudentID', sql.NVarChar, updatedReply.StudentID)
-            .input('Name', sql.NVarChar, updatedReply.Name)
-            .input('Content', sql.NVarChar, updatedReply.Content)
-            .input('UP_User', sql.NVarChar, updatedReply.UP_User)
-            .query('UPDATE Reply SET Class = @Class, StudentID = @StudentID, Name = @Name, Content = @Content, UP_User = @UP_User, UP_Date = GETDATE() WHERE ID = @ID');
+            .input('UP_User', sql.Int, 1) // 將 UP_User 修改為 1
+            .query('UPDATE Reply SET UP_User = @UP_User, UP_Date = GETDATE() WHERE ID = @ID');
 
         if (result.rowsAffected[0] === 0) {
             res.status(404).send('Reply not found');
@@ -144,5 +178,6 @@ router.put('/reply/:ID', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 export default router;

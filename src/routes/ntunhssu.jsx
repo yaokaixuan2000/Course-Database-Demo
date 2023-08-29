@@ -54,7 +54,7 @@ const Ntunhssu = () => {
                 <title>北護學生會-靜態展</title>
             </Helmet>
             <header className="bg-blue-500/40 text-black/70 font-bold text-center p-4">
-                <h1 className="text-2xl">學生會</h1>
+                <h1 className="text-2xl"><Icon icon="la:school" className="inline text-2xl" />北護學生會</h1>
                 Student Union of NTUNHS
 
             </header>

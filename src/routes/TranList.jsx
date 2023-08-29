@@ -29,11 +29,10 @@ function TransList() {
     };
 
 
-
     const fetchReplyData = () => {
         fetch('/api/reply')
             .then((response) => response.json())
-            .then((data) =>  setTransData(data))
+            .then((data) => setTransData(data))
             .catch((error) => console.error('Error fetching reply data:', error));
     };
 
@@ -44,6 +43,13 @@ function TransList() {
             .catch((error) => console.error('Error fetching gender data:', error));
     };
     genderStats.map((item) => console.log(item.NumberOfStudents))
+
+    const fetchLongestReplyData = () => {
+        fetch('/api/len')
+            .then((response) => response.json())
+            .then((data) => setTransData(data))
+            .catch((error) => console.error('Error fetching longest reply data:', error));
+    };
 
     useEffect(() => {
         fetchReplyData();
@@ -57,7 +63,7 @@ function TransList() {
         Name: '',
         Gender: '',
         Content: '',
-        UP_User: '',
+        UP_Date: '',
     });
 
     const addReply = (newReply) => {
@@ -87,6 +93,7 @@ function TransList() {
             .then((data) => {
                 fetchReplyData();  // 重新載入資料
                 setShowDeleteAlert(true);
+                setSearchedTrans(null);
             })
             .catch((error) => console.error('Error deleting transaction:', error));
         setTimeout(() => {
@@ -122,7 +129,6 @@ function TransList() {
             });
 
             if (response.ok) {
-                // 更新成功，關閉編輯視窗並重新載入交易數據
                 closeEditModal();
                 fetchReplyData();
 
@@ -153,149 +159,137 @@ function TransList() {
 
 
     return (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container w-full mx-auto px-4 sm:px-6 lg:px-8">
             {!loggedIn ? (
                 <p className="text-center text-red-600 text-4xl">請先登入方可使用所有功能謝謝</p>
             ) : (
+
                 <div className="container m-4 rounded-lg border-4 border-gray-500 bg-gray-200 mx-auto  p-4">
-                    <h1 className="m-4 font-bold text-2xl">回覆紀錄 CRUD</h1>
-                    <div>
-                        <p>男生總數: {genderStats.find(item => item.Gender === '男性')?.NumberOfStudents || 0}</p>
-                        <p>女生總數: {genderStats.find(item => item.Gender === '女性')?.NumberOfStudents || 0}</p>
+                    <div className="flex justify-between items-center">
+                        <h1 className="m-4 font-bold text-2xl"><Icon icon="mdi:cloud-print"
+                                                                     className=" text-green-500 inline text-4xl"/>靜態展回覆紀錄統計
+                        </h1>
+                        <div className="heard text-l font-bold flex m-2">
+                            <p className="text-xl mr-4">人員統計:</p>
+                            <p className="mr-4 text"><Icon icon="icon-park-solid:boy-one"
+                                                           className="inline text-xl"/>男生: {genderStats.find(item => item.Gender === '男性')?.NumberOfStudents || 0}
+                            </p>
+                            <p className="mr-4"><Icon icon="icon-park-solid:girl-one"
+                                                      className="inline text-xl"/>女生: {genderStats.find(item => item.Gender === '女性')?.NumberOfStudents || 0}
+                            </p>
+                            <p className="mr-4"><Icon icon="raphael:people"
+                                                      className="inline text-xl"/>總數: {genderStats.find(item => item.Gender === '總數')?.NumberOfStudents || 0}
+                            </p>
+                        </div>
                     </div>
 
 
-                    <form className="flex flex-col md:flex-row justify-center items-center w-full md:w-2/3 mx-auto"
-                          onSubmit={(e) => {
-                              e.preventDefault();
-                              addReply(newReply);
-                          }}>
-
-
-
-                        <table className="w-full  border-gray-500 bg-white border-2">
-                            <thead className="bg-gray-100">
-                            <tr>
-                                <th className="py-2 px-4 border">班級</th>
-                                <th className="py-2 px-4 border">學生編號</th>
-                                <th className="py-2 px-4 border">姓名</th>
-                                <th className="py-2 px-4 border">性別</th>
-                                <th className="py-2 px-4 border">回覆內容</th>
-                                <th className="py-2 px-4 border"/>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="班級" value={newReply.Class}
-                                           onChange={(e) => setNewReply({ ...newReply, Class: e.target.value })}/>
-                                </td>
-                                <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="學生編號" value={newReply.StudentID}
-                                           onChange={(e) => setNewReply({ ...newReply, StudentID: e.target.value })}/>
-                                </td>
-                                <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="姓名" value={newReply.Name}
-                                           onChange={(e) => setNewReply({ ...newReply, Name: e.target.value })}/>
-                                </td>
-                                <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="性別" value={newReply.Gender}
-                                           onChange={(e) => setNewReply({ ...newReply, Gender: e.target.value })}/>
-                                </td>
-                                <td className="py-2 px-4 border">
-                                    <input type="text" placeholder="回覆內容" value={newReply.Content}
-                                           onChange={(e) => setNewReply({ ...newReply, Content: e.target.value })}/>
-                                </td>
-                                <td>
-                                    <button
-                                        className=" px-4 h-8 rounded-lg  text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
-                                        type="submit">+
-                                    </button>
-                                    {showAlert && (
-                                        <div
-                                            className="absolute bottom-4 right-4 bg-green-500 text-white p-2 rounded shadow animate-slide-in-out"
-                                        >
-                                           建立成功！
-                                        </div>
-                                    )}
-
-                                </td>
-                            </tr>
-
-                            </tbody>
-                        </table>
-
-                    </form>
                     <div className="flex flex-col md:flex-row justify-center items-center">
-                        <input
-                            className="border-2 bg-white text-center m-2 bg-gray-200 rounded-lg border-gray-300"
-                            type="text"
-                            placeholder="輸入交易編號"
-                            value={searchTranID}
-                            onChange={(e) => setSearchTranID(e.target.value)}
-                        />
-                        <button
-                            className=" px-4 h-8 rounded-lg m-2   text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
-                            onClick={searchTransaction}>查詢
-                        </button>
-                    </div>
-                    <div className="mb-4">
-                        <button
-                            className=" px-4 h-8 rounded-lg  text-xl font-bold  text-white bg-green-500 hover:bg-green-700"
-                            onClick={() => setSearchedTrans(null)}>顯示全部
-                        </button>
+                        <div>
+
+                            <button
+                                className=" px-4 h-8 rounded-lg m-2   text-xl font-bold  bg-green-500/40 hover:bg-green-600 text-black hover:text-white"
+                                onClick={searchTransaction}><Icon icon="tabler:search"
+                                                                  className="text-yellow-400 text-2xl inline font-bold"/>單一序號查詢
+                            </button>
+                            <input
+                                className="border-2 bg-white  w-28 h-8 text-center m-2 bg-gray-200 rounded-lg border-gray-300"
+                                type="text"
+                                placeholder="序號查詢"
+                                value={searchTranID}
+                                onChange={(e) => setSearchTranID(e.target.value)}
+                            />
+
+                            <button
+                                className=" px-4 h-8 rounded-lg  text-xl font-bold   bg-green-500/40 hover:bg-green-600 text-black hover:text-white"
+                                onClick={() => setSearchedTrans(null)}><Icon icon="uil:smile"
+                                                                             className="text-yellow-400 text-2xl inline"/>顯示所有資料
+                            </button>
+
+                            <button
+                                className=" px-4 m-2 h-8 rounded-lg  text-xl font-bold    bg-green-500/40 hover:bg-green-600 text-black hover:text-white"
+                                onClick={fetchLongestReplyData}><Icon icon="noto-v1:ok-hand"
+                                                                      className="text-yellow-400 inline"/>顯示字最多的
+                            </button>
+                            <button
+                                className=" px-4 m-2 h-8 rounded-lg  text-xl font-bold   bg-green-500/40 hover:bg-green-600 text-black hover:text-white"
+                                onClick={fetchLongestReplyData}><Icon icon="ant-design:star-filled"
+                                                                      className="text-yellow-500 inline"/>優先顯示有標記的
+                            </button>
+                        </div>
                     </div>
 
                     <div className="overflow-x-auto">
                         <table className="min-w-full bg-white border-4 border-gray-500">
                             <thead>
                             <tr>
-                                <th className="py-2 px-4 border">序號</th>
-                                <th className="py-2 px-4 border">班級</th>
-                                <th className="py-2 px-4 border">學號</th>
+                                <th className="text-center border">標記</th>
+                                <th className=" border ">序號</th>
+                                <th className="py-2 px-2 border">班級</th>
+                                <th className="py-2 px-2 border">學號</th>
                                 <th className="py-2 px-4 border">姓名</th>
-                                <th className="py-2 px-4 border">性別</th>
+                                <th className=" border ">性別</th>
                                 <th className="py-2 px-4 border">回覆說明</th>
                                 <th className="py-2 px-4 border">填表單時間</th>
-                                <th className="py-2 px-4 border">操作</th>
+                                <th className="py-2 px-4 border">標記/刪除</th>
                             </tr>
                             </thead>
                             <tbody>
                             {searchedTrans ? (
                                 <tr className="bg-gray-100">
-                                    <td className="py-2 px-4 border">{searchedTrans.ID}</td>
+                                    <td className="text-center mx-auto border">{searchedTrans.UP_User === 0 ?
+                                        <Icon icon="ant-design:star-filled "
+                                              className="text-yellow-400 text-center"/> : searchedTrans.UP_User}</td>
+                                    <td className="text-center border">{searchedTrans.ID}</td>
                                     <td className="py-2 px-4 border">{searchedTrans.Class}</td>
                                     <td className="py-2 px-4 border">{searchedTrans.StudentID}</td>
                                     <td className="py-2 px-4 border">{searchedTrans.Name}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.Gender}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.Content}</td>
-                                    <td className="py-2 px-4 border">{searchedTrans.UP_User}</td>
+                                    <td className="py-2   w-10 text-center border">{searchedTrans.Gender}</td>
+                                    <td className="py-2 px-2 w-1/2 border">{searchedTrans.Content}</td>
+                                    <td className="py-2 px-4 border">{searchedTrans.UP_Date}</td>
+
                                     <td className="py-2 px-4 flex justify-center border">
                                         <button
-                                            className="px-4 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
-                                            onClick={() => deleteTransaction(searchedTrans.ID)}>
-                                            刪除
+                                            className="px-2.5 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
+                                        >
+                                            <Icon icon="mdi:account-star"/>
                                         </button>
+                                        <button
+                                            className="px-2.5 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-red-500 hover:bg-red-700"
+                                            onClick={() => deleteTransaction(searchedTrans.ID)}>
+                                            <Icon icon="material-symbols:delete"/>
+                                        </button>
+
                                     </td>
                                 </tr>
                             ) : (
                                 transData.map((trans, index) => (
                                     <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : ''}>
-                                        <td className="py-2 px-4 border">{trans.ID}</td>
-                                        <td className="py-2 px-4 border">{trans.Class}</td>
+                                        <td className="text-center border">{trans.UP_User === 0 ?
+                                            <Icon icon="ant-design:star-filled"
+                                                  className="text-yellow-400"/> : trans.UP_User}</td>
+                                        <td className="text-center  border">{trans.ID}</td>
+                                        <td className="py-2 px-4  border">{trans.Class}</td>
                                         <td className="py-2 px-4 border">{trans.StudentID}</td>
                                         <td className="py-2 px-4 border">{trans.Name}</td>
-                                        <td className="py-2 px-4 border">{trans.Gender}</td>
-                                        <td className="py-2 px-4 border">{trans.Content}</td>
+                                        <td className="py-2 w-10 text-center border">{trans.Gender}</td>
+                                        <td className="py-2 px-2 w-1/2 border">{trans.Content}</td>
                                         <td className="py-2 px-4 border">{trans.UP_Date}</td>
                                         <td className="py-2 px-4 flex justify-center border">
                                             <button
-                                                className="px-4 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
-                                                onClick={() => deleteTransaction(trans.ID)}>
-                                                刪除
+                                                className="px-2.5 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
+                                            >
+                                                <Icon icon="mdi:account-star"/>
                                             </button>
+                                            <button
+                                                className="px-2.5 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-red-500 hover:bg-red-700"
+                                                onClick={() => deleteTransaction(trans.ID)}>
+                                                <Icon icon="material-symbols:delete"/>
+                                            </button>
+
                                             {showDeleteAlert && (
-                                                <div className="absolute bottom-4 right-4 bg-red-500 text-white p-2 rounded shadow animate-slide-in-out">
+                                                <div
+                                                    className="absolute bottom-4 right-4 bg-red-500 text-white p-2 rounded shadow animate-slide-in-out">
                                                     刪除成功!
                                                 </div>
                                             )}
@@ -308,6 +302,8 @@ function TransList() {
                         </table>
 
                     </div>
+
+
                 </div>
             )}
             <style>
