@@ -94,6 +94,7 @@ function TransList() {
                 fetchReplyData();  // 重新載入資料
                 setShowDeleteAlert(true);
                 setSearchedTrans(null);
+
             })
             .catch((error) => console.error('Error deleting transaction:', error));
         setTimeout(() => {
@@ -116,36 +117,57 @@ function TransList() {
     };
 
 
-    const handleEditSubmit = async (e) => {
-        e.preventDefault();
 
-        try {
-            const response = await fetch(`/api/reply/${editedTrans.TranID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(editedTrans),
-            });
+    const updateReply = (ID) => {
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+        };
 
-            if (response.ok) {
-                closeEditModal();
-                fetchReplyData();
-
-                if (searchedTrans) {
-                    fetch(`/api/trans/${searchedTrans.TranID}`)
-                        .then((response) => response.json())
-                        .then((data) => setSearchedTrans(data))
-                        .catch((error) => console.error('Error fetching searched data:', error));
+        fetch(`/api/reply/${ID}`, requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    console.error('Failed to update reply');
+                    throw new Error('Failed to update reply');
                 }
-            } else {
-                // 更新失敗，可以顯示錯誤信息
-                console.error('Update failed');
-            }
-        } catch (error) {
-            console.error('Error updating transaction:', error);
-        }
+            })
+            .then(data => {
+                // 如果有返回的資料，你可以在這裡使用它。
+                fetchReplyData(); // 呼叫一個函數來重新載入資料
+            })
+            .catch(error => console.error('Error updating reply:', error));
     };
+    const SearchupdateReply = (ID) => {
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+        };
+
+        fetch(`/api/reply/${ID}`, requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+
+                } else {
+                    console.error('Failed to update reply');
+                    throw new Error('Failed to update reply');
+                }
+            })
+            .then(data => {
+                // 如果有返回的資料，你可以在這裡使用它。
+                fetchReplyData(); // 呼叫一個函數來重新載入資料
+            })
+            .catch(error => console.error('Error updating reply:', error));
+
+        fetch(`/api/reply/${searchTranID}`)
+            .then((response) => response.json())
+            .then((data) => setSearchedTrans(data))
+            .catch((error) => console.error('Error searching transaction:', error));
+    };
+
+
     const searchTransaction = () => {
         if (!searchTranID) {
             return;
@@ -156,7 +178,12 @@ function TransList() {
             .then((data) => setSearchedTrans(data))
             .catch((error) => console.error('Error searching transaction:', error));
     };
-
+    const fetchStarData = () => {
+        fetch('/api/star')
+            .then(response => response.json())
+            .then(data => setTransData(data))
+            .catch(error => console.error('Error fetching star data:', error));
+    };
 
     return (
         <div className="container w-full mx-auto px-4 sm:px-6 lg:px-8">
@@ -172,10 +199,10 @@ function TransList() {
                         <div className="heard text-l font-bold flex m-2">
                             <p className="text-xl mr-4">人員統計:</p>
                             <p className="mr-4 text"><Icon icon="icon-park-solid:boy-one"
-                                                           className="inline text-xl"/>男生: {genderStats.find(item => item.Gender === '男性')?.NumberOfStudents || 0}
+                                                           className="text-blue-500 inline text-xl"/>男生: {genderStats.find(item => item.Gender === '男性')?.NumberOfStudents || 0}
                             </p>
                             <p className="mr-4"><Icon icon="icon-park-solid:girl-one"
-                                                      className="inline text-xl"/>女生: {genderStats.find(item => item.Gender === '女性')?.NumberOfStudents || 0}
+                                                      className="inline text-red-600 text-xl"/>女生: {genderStats.find(item => item.Gender === '女性')?.NumberOfStudents || 0}
                             </p>
                             <p className="mr-4"><Icon icon="raphael:people"
                                                       className="inline text-xl"/>總數: {genderStats.find(item => item.Gender === '總數')?.NumberOfStudents || 0}
@@ -213,14 +240,14 @@ function TransList() {
                             </button>
                             <button
                                 className=" px-4 m-2 h-8 rounded-lg  text-xl font-bold   bg-green-500/40 hover:bg-green-600 text-black hover:text-white"
-                                onClick={fetchLongestReplyData}><Icon icon="ant-design:star-filled"
+                                onClick={fetchStarData}><Icon icon="ant-design:star-filled"
                                                                       className="text-yellow-500 inline"/>優先顯示有標記的
                             </button>
                         </div>
                     </div>
 
                     <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white border-4 border-gray-500">
+                        <table className=" min-w-full bg-white border-4 border-gray-500">
                             <thead>
                             <tr>
                                 <th className="text-center border">標記</th>
@@ -237,9 +264,11 @@ function TransList() {
                             <tbody>
                             {searchedTrans ? (
                                 <tr className="bg-gray-100">
-                                    <td className="text-center mx-auto border">{searchedTrans.UP_User === 0 ?
-                                        <Icon icon="ant-design:star-filled "
-                                              className="text-yellow-400 text-center"/> : searchedTrans.UP_User}</td>
+                                    <td className="text-center mx-auto border">{searchedTrans.UP_User === 1 ? (
+                                        <Icon icon="ant-design:star-filled" className="text-yellow-400" />
+                                    ) : (
+                                        ''
+                                    )}</td>
                                     <td className="text-center border">{searchedTrans.ID}</td>
                                     <td className="py-2 px-4 border">{searchedTrans.Class}</td>
                                     <td className="py-2 px-4 border">{searchedTrans.StudentID}</td>
@@ -251,7 +280,7 @@ function TransList() {
                                     <td className="py-2 px-4 flex justify-center border">
                                         <button
                                             className="px-2.5 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
-                                        >
+                                            onClick={() => SearchupdateReply(searchedTrans.ID)}>
                                             <Icon icon="mdi:account-star"/>
                                         </button>
                                         <button
@@ -265,9 +294,11 @@ function TransList() {
                             ) : (
                                 transData.map((trans, index) => (
                                     <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : ''}>
-                                        <td className="text-center border">{trans.UP_User === 0 ?
-                                            <Icon icon="ant-design:star-filled"
-                                                  className="text-yellow-400"/> : trans.UP_User}</td>
+                                        <td className="text-center border"> {trans.UP_User === 1 ? (
+                                            <Icon icon="ant-design:star-filled" className="text-yellow-400" />
+                                        ) : (
+                                            ''
+                                        )}</td>
                                         <td className="text-center  border">{trans.ID}</td>
                                         <td className="py-2 px-4  border">{trans.Class}</td>
                                         <td className="py-2 px-4 border">{trans.StudentID}</td>
@@ -278,7 +309,7 @@ function TransList() {
                                         <td className="py-2 px-4 flex justify-center border">
                                             <button
                                                 className="px-2.5 mr-4 h-8 rounded-lg text-xl font-bold text-white bg-green-500 hover:bg-green-700"
-                                            >
+                                                onClick={() => updateReply(trans.ID)}>
                                                 <Icon icon="mdi:account-star"/>
                                             </button>
                                             <button
