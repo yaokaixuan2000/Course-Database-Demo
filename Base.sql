@@ -90,3 +90,5 @@ FROM Reply
 ORDER BY UP_User DESC;
 
 SELECT ID, Class, StudentID, Name, Gender, Content, CONVERT(varchar, UP_Date, 20) AS UP_Date, UP_User FROM Reply ORDER BY UP_User DESC;
+
+SELECT ID, Class, StudentID, Name, Gender, Content, CONVERT(varchar, UP_Date, 20) AS UP_Date, UP_User FROM Reply ORDER BY ID ASC;
