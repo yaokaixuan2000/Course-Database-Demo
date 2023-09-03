@@ -1,7 +1,7 @@
 export default function Root() {
     return (
         <>
-            <h1 className="italic">Hello, world!</h1>
+            <h1 className="italic">test</h1>
         </>
     );
 }
